@@ -5,12 +5,28 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  schemas = ["uni-hungry"]
+  schemas  = ["uni-hungry"]
 }
 
-model Teste {
-  id   Int    @id @default(autoincrement())
-  name String
-  
+model User {
+  id        String   @id @default(uuid()) // Mesmo ID do auth.users do Supabase
+  email     String   @unique
+  name      String?
+  phone     String?
+  role      UserRole @default(USER) // Role customizada!
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("uni-hungry")
+}
+
+// Enum para roles customizadas
+enum UserRole {
+  ADMIN      // Administrador total
+  MANAGER    // Gerente de restaurante
+  USER       // Usuário comum
+  WAITER   // Garçom
+
   @@schema("uni-hungry")
 }
