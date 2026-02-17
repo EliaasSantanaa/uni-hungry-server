@@ -9,6 +9,6 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe()); 
 
   await app.listen(process.env.PORT ?? 5000);
-  logger.debug(`Servidor rodando http://192.168.1.29:${process.env.PORT ?? 5000}`);
+  logger.debug(`Servidor rodando http://localhost:${process.env.PORT ?? 5000}`);
 }
 bootstrap();
