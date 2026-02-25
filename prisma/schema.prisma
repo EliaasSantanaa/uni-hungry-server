@@ -18,15 +18,16 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@map("users") // Mapeia para a tabela auth.users do Supabase
   @@schema("uni-hungry")
 }
 
 // Enum para roles customizadas
 enum UserRole {
-  ADMIN      // Administrador total
-  MANAGER    // Gerente de restaurante
-  USER       // Usuário comum
-  WAITER   // Garçom
+  ADMIN // Administrador total
+  MANAGER // Gerente de restaurante
+  USER // Usuário comum
+  WAITER // Garçom
 
   @@schema("uni-hungry")
 }
