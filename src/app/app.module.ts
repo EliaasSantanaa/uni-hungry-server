@@ -5,6 +5,10 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from 'src/database/prisma.module';
 import { AuthModule } from 'src/module/auth/auth.module';
 import { ResendModule } from 'src/module/resend/resend.module';
+import { UsersModule } from 'src/module/users/users.module';
+import { DashboardModule } from 'src/module/dashboard/dashboard.module';
+import { RestaurantsModule } from 'src/module/restaurants/restaurants.module';
+import { MetricsModule } from 'src/module/metrics/metrics.module';
 
 @Module({
   imports: [
@@ -13,7 +17,11 @@ import { ResendModule } from 'src/module/resend/resend.module';
     }),
     PrismaModule,
     ResendModule,
-    AuthModule
+    AuthModule,
+    UsersModule,
+    DashboardModule,
+    RestaurantsModule,
+    MetricsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

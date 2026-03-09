@@ -9,25 +9,50 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid()) // Mesmo ID do auth.users do Supabase
-  email     String   @unique
-  name      String?
+  id           String   @id @default(uuid()) // Mesmo ID do auth.users do Supabase
+  email        String   @unique
+  name         String?
+  phone        String?
+  role         UserRole @default(USER)
+  isActive     Boolean  @default(true)
+  restaurantId String? // FK para Restaurant (apenas MANAGER e WAITER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relações
+  restaurant Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@map("users")
+  @@schema("uni-hungry")
+}
+
+model Restaurant {
+  id        String   @id @default(uuid())
+  name      String
+  cnpj      String?  @unique
   phone     String?
-  role      UserRole @default(USER) // Role customizada!
+  address   String?
+  city      String?
+  state     String?
+  zipCode   String?
   isActive  Boolean  @default(true)
+  ownerId   String // ID do MANAGER (dono)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("users") // Mapeia para a tabela auth.users do Supabase
+  // Relações
+  employees User[] // Todos os usuários vinculados (MANAGER, WAITER)
+
+  @@map("restaurants")
   @@schema("uni-hungry")
 }
 
 // Enum para roles customizadas
 enum UserRole {
-  ADMIN // Administrador total
-  MANAGER // Gerente de restaurante
-  USER // Usuário comum
-  WAITER // Garçom
+  ADMIN // Administrador do sistema (acesso total)
+  MANAGER // Dono de restaurante (acesso apenas ao seu restaurante)
+  WAITER // Garçom (acesso apenas ao seu restaurante)
+  USER // Usuário comum (não usado no admin)
 
   @@schema("uni-hungry")
 }
