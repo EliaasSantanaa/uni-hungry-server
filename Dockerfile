@@ -22,6 +22,9 @@ RUN npx prisma generate --schema=prisma/schema.prisma
 # Build da aplicação
 RUN npm run build
 
+# Debug: Listar conteúdo do dist
+RUN ls -la dist/
+
 # Stage 2: Production
 FROM node:20-alpine AS production
 
@@ -49,6 +52,9 @@ ENV DIRECT_URL=""
 
 # Copiar build da aplicação
 COPY --from=builder /app/dist ./dist
+
+# Debug: Verificar se os arquivos foram copiados
+RUN ls -la dist/
 
 # Criar usuário não-root
 RUN addgroup -g 1001 -S nodejs && \
