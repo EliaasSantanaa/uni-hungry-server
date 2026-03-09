@@ -3,6 +3,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Definir variáveis de ambiente dummy para o build
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
 # Copiar arquivos de dependências
 COPY package*.json ./
 
@@ -23,6 +27,10 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
+# Definir variáveis de ambiente dummy para o generate
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV DIRECT_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+
 # Copiar arquivos de dependências
 COPY package*.json ./
 
@@ -34,6 +42,10 @@ COPY prisma ./prisma
 
 # Gerar Prisma Client na imagem de produção
 RUN npx prisma generate --schema=prisma/schema.prisma
+
+# Remover as ENVs dummy (serão substituídas pelas reais do Render)
+ENV DATABASE_URL=""
+ENV DIRECT_URL=""
 
 # Copiar build da aplicação
 COPY --from=builder /app/dist ./dist
