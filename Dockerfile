@@ -32,9 +32,6 @@ RUN npm ci --only=production
 # Copiar schema do Prisma
 COPY prisma ./prisma
 
-# Copiar schemas gerados (se existirem)
-COPY generated ./generated
-
 # Gerar Prisma Client na imagem de produção
 RUN npx prisma generate --schema=prisma/schema.prisma
 
@@ -49,7 +46,7 @@ RUN addgroup -g 1001 -S nodejs && \
 USER nestjs
 
 # Expor porta da aplicação
-EXPOSE 3000
+EXPOSE 3001
 
 # Comando para iniciar a aplicação
 CMD ["node", "dist/main"]
