@@ -61,4 +61,4 @@ USER nestjs
 EXPOSE 3001
 
 # Comando para iniciar a aplicação
-CMD ["npm", "run", "start"]
+CMD ["node", "dist/main.js"]
