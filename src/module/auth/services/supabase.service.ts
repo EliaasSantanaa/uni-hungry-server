@@ -150,4 +150,39 @@ export class SupabaseService {
       return { success: false, error: error.message };
     }
   }
+
+  async setUserActiveStatus(
+    userId: string,
+    isActive: boolean,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      if (!this.supabaseAdmin) {
+        throw new Error('SUPABASE_SERVICE_ROLE_KEY nao configurada');
+      }
+
+      const { error } = await this.supabaseAdmin.auth.admin.updateUserById(
+        userId,
+        {
+          ban_duration: isActive ? 'none' : '876000h',
+        },
+      );
+
+      if (error) {
+        this.logger.error(
+          `Erro ao atualizar status do usuario ${userId}: ${error.message}`,
+        );
+        return { success: false, error: error.message };
+      }
+
+      this.logger.log(
+        `Status no Supabase atualizado para usuario ${userId}: ${isActive ? 'ativo' : 'inativo'}`,
+      );
+      return { success: true };
+    } catch (error) {
+      this.logger.error(
+        `Erro ao atualizar status no Supabase para ${userId}: ${error.message}`,
+      );
+      return { success: false, error: error.message };
+    }
+  }
 }
