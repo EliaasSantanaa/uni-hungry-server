@@ -9,6 +9,8 @@ import { UsersModule } from 'src/module/users/users.module';
 import { DashboardModule } from 'src/module/dashboard/dashboard.module';
 import { RestaurantsModule } from 'src/module/restaurants/restaurants.module';
 import { MetricsModule } from 'src/module/metrics/metrics.module';
+import { MenuModule } from 'src/module/menu/menu.module';
+import { TabsModule } from 'src/module/tabs/tabs.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { MetricsModule } from 'src/module/metrics/metrics.module';
     DashboardModule,
     RestaurantsModule,
     MetricsModule,
+    MenuModule,
+    TabsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

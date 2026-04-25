@@ -10,8 +10,9 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:3001',
-    'http://localhost:5173', // Vite
-    'http://localhost:5174', // Vite alternativo
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://localhost:8081',
     process.env.FRONTEND_URL,
   ].filter(Boolean);
 
