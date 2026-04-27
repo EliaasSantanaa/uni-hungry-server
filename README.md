@@ -1,98 +1,178 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🍽️ Uni Hungry — Server
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST do sistema **Uni Hungry**, plataforma de gestão de restaurantes universitários.
+Construída com **NestJS**, **Prisma** (PostgreSQL via Supabase) e autenticação via **JWT + OTP por e-mail**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 📋 Pré-requisitos
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+| Ferramenta | Versão mínima |
+|---|---|
+| Node.js | 20.x |
+| npm | 10.x |
+| PostgreSQL | 14+ (ou conta Supabase) |
 
-## Project setup
+---
+
+## 🚀 Instalação e execução
+
+### 1. Clone o repositório
 
 ```bash
-$ npm install
+git clone https://github.com/seu-usuario/uni-hungry-server.git
+cd uni-hungry-server
 ```
 
-## Compile and run the project
+### 2. Instale as dependências
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+### 3. Configure as variáveis de ambiente
+
+Copie o arquivo de exemplo e preencha com suas credenciais:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cp .env.example .env
 ```
 
-## Deployment
+| Variável | Descrição |
+|---|---|
+| `DATABASE_URL` | Connection string do PostgreSQL (ex: `postgresql://user:pass@host:5432/db`) |
+| `SUPABASE_URL` | URL do projeto Supabase |
+| `SUPABASE_ANON_KEY` | Chave anônima do Supabase |
+| `SUPABASE_SERVICE_ROLE_KEY` | Chave de serviço do Supabase |
+| `RESEND_API_KEY` | Chave da API Resend (envio de e-mails OTP) |
+| `RESEND_FROM` | Endereço de envio dos e-mails (ex: `noreply@seudominio.com`) |
+| `FRONTEND_URL` | URL do frontend (adicionada ao CORS) |
+| `PORT` | Porta em que o servidor vai rodar (padrão: `3001`) |
+| `NODE_ENV` | Ambiente (`development` / `production`) |
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### 4. Execute as migrations do banco
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma migrate deploy
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+> Para gerar o Prisma Client após alterações no schema:
+> ```bash
+> npx prisma generate
+> ```
 
-## Resources
+### 5. (Opcional) Seed do banco — criar admin inicial
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+npm run seed:admin
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 6. Inicie o servidor
 
-## Support
+```bash
+# Modo desenvolvimento (hot reload)
+npm run start:dev
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+# Modo produção
+npm run start:prod
+```
 
-## Stay in touch
+O servidor estará disponível em: **http://localhost:3001**
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
-## License
+## 📖 Documentação da API (Swagger)
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Com o servidor rodando, acesse:
+
+```
+http://localhost:3001/docs
+```
+
+A documentação interativa lista todas as rotas, parâmetros, exemplos de payload e respostas.
+
+### Fluxo de autenticação
+
+```
+POST /auth/sign-in       → envia código OTP por e-mail
+POST /auth/verify-otp    → valida o código e retorna o JWT
+```
+
+Use o token retornado no header de todas as requisições autenticadas:
+
+```
+Authorization: Bearer <token>
+```
+
+---
+
+## 🗂️ Módulos da API
+
+| Prefixo | Descrição | Roles permitidas |
+|---|---|---|
+| `GET /` | Health check + status do banco | Público |
+| `/auth` | Autenticação (OTP) e gestão de funcionários | Público / Autenticado |
+| `/restaurants` | Gestão do restaurante do usuário | MANAGER, WAITER |
+| `/menu` | Cardápio — itens e categorias | MANAGER, WAITER |
+| `/tabs` | Mesas e comandas | MANAGER, WAITER |
+| `/users` | Gerenciamento de usuários | ADMIN |
+| `/dashboard` | Visão geral administrativa | ADMIN |
+| `/metrics` | Métricas por restaurante | ADMIN |
+
+---
+
+## 🐳 Docker
+
+```bash
+docker build -t uni-hungry-server .
+docker run -p 3001:3001 --env-file .env uni-hungry-server
+```
+
+---
+
+## 🧪 Testes
+
+```bash
+# Testes unitários
+npm run test
+
+# Testes com watch
+npm run test:watch
+
+# Cobertura de testes
+npm run test:cov
+
+# Testes E2E
+npm run test:e2e
+```
+
+---
+
+## 🛠️ Scripts disponíveis
+
+| Comando | Descrição |
+|---|---|
+| `npm run start:dev` | Inicia em modo desenvolvimento com hot reload |
+| `npm run start:debug` | Inicia em modo debug com hot reload |
+| `npm run start:prod` | Inicia a build de produção |
+| `npm run build` | Compila o projeto |
+| `npm run lint` | Executa o ESLint |
+| `npm run format` | Formata o código com Prettier |
+| `npm run seed:admin` | Cria o usuário administrador inicial |
+
+---
+
+## 🏗️ Tecnologias
+
+- **[NestJS](https://nestjs.com/)** — framework Node.js
+- **[Prisma](https://www.prisma.io/)** — ORM com PostgreSQL
+- **[Supabase](https://supabase.com/)** — banco de dados e autenticação base
+- **[Resend](https://resend.com/)** — envio de e-mails transacionais (OTP)
+- **[Passport JWT](https://www.passportjs.org/)** — autenticação por token
+- **[@nestjs/swagger](https://docs.nestjs.com/openapi/introduction)** — documentação OpenAPI
+
+---
+
+## 📄 Licença
+
+Projeto privado — todos os direitos reservados.
