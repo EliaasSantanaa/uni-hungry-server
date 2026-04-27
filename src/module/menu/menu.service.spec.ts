@@ -25,7 +25,7 @@ const makeMenuItem = (overrides = {}) => ({
   name: 'X-Burger',
   description: 'Delicioso',
   price: { toString: () => '25.90' },
-  category: MenuCategory.FOOD,
+  category: MenuCategory.PRATO_PRINCIPAL,
   isAvailable: true,
   imageUrl: null,
   restaurantId: 'rest-1',
@@ -123,11 +123,11 @@ describe('MenuService', () => {
       setupUser();
       mockDb.menuItem.findMany.mockResolvedValue([makeMenuItem()]);
 
-      const result = await service.listMyMenuItems('user-1', MenuCategory.FOOD);
+      const result = await service.listMyMenuItems('user-1', MenuCategory.PRATO_PRINCIPAL);
 
       expect(result.success).toBe(true);
       expect(mockDb.menuItem.findMany).toHaveBeenCalledWith({
-        where: { restaurantId: 'rest-1', category: MenuCategory.FOOD },
+        where: { restaurantId: 'rest-1', category: MenuCategory.PRATO_PRINCIPAL },
         orderBy: [{ category: 'asc' }, { name: 'asc' }],
       });
     });
@@ -139,7 +139,7 @@ describe('MenuService', () => {
       name: 'X-Salada ',
       description: ' Muito bom ',
       price: 20.0,
-      category: MenuCategory.FOOD,
+      category: MenuCategory.PRATO_PRINCIPAL,
     };
 
     it('lança BadRequestException se já existir item com mesmo nome e categoria', async () => {
@@ -167,7 +167,7 @@ describe('MenuService', () => {
           name: 'X-Salada',
           description: 'Muito bom',
           price: 20.0,
-          category: MenuCategory.FOOD,
+          category: MenuCategory.PRATO_PRINCIPAL,
           isAvailable: true,
           imageUrl: null,
           restaurantId: 'rest-1',

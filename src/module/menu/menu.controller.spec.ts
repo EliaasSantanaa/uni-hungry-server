@@ -38,15 +38,15 @@ describe('MenuController', () => {
     it('deve chamar menuService.listMyMenuItems com categoria', async () => {
       mockMenuService.listMyMenuItems.mockResolvedValue({ success: true });
 
-      await controller.listItems(mockUser as any, MenuCategory.DRINK);
+      await controller.listItems(mockUser as any, MenuCategory.BEBIDAS);
 
-      expect(mockMenuService.listMyMenuItems).toHaveBeenCalledWith('user-1', MenuCategory.DRINK);
+      expect(mockMenuService.listMyMenuItems).toHaveBeenCalledWith('user-1', MenuCategory.BEBIDAS);
     });
   });
 
   describe('createItem', () => {
     it('deve chamar menuService.createMenuItem', async () => {
-      const dto = { name: 'Coca', price: 5, category: MenuCategory.DRINK };
+      const dto = { name: 'Coca', price: 5, category: MenuCategory.BEBIDAS };
       mockMenuService.createMenuItem.mockResolvedValue({ success: true });
 
       await controller.createItem(dto as any, mockUser as any);

@@ -242,7 +242,7 @@ describe('AuthService', () => {
     const dto = {
       email: 'waiter@test.com',
       name: 'Garçom',
-      phone: null,
+      phone: undefined,
       role: UserRole.WAITER,
     };
 
