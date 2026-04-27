@@ -29,5 +29,6 @@ import { TabsModule } from 'src/module/tabs/tabs.module';
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [AppService],
 })
 export class AppModule {}
