@@ -18,4 +18,13 @@ export interface DashboardStats {
     role: string;
     createdAt: Date;
   }>;
+  operations: {
+    totalMenuItems: number;
+    availableMenuItems: number;
+    totalTables: number;
+    openTabs: number;
+    closedTabsToday: number;
+    cancelledTabsToday: number;
+    revenueToday: number;
+  };
 }
