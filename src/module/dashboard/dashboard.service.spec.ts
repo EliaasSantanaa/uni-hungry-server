@@ -6,6 +6,9 @@ import { UserRole } from 'generated/prisma/client';
 const mockDb = {
   user: { findMany: jest.fn() },
   restaurant: { findMany: jest.fn() },
+  menuItem: { count: jest.fn() },
+  table: { count: jest.fn() },
+  tab: { count: jest.fn(), aggregate: jest.fn() },
 };
 
 describe('DashboardService', () => {
@@ -26,15 +29,44 @@ describe('DashboardService', () => {
   describe('getStats', () => {
     it('deve retornar as estatísticas corretamente', async () => {
       mockDb.user.findMany.mockResolvedValue([
-        { id: '1', role: UserRole.ADMIN, isActive: true },
-        { id: '2', role: UserRole.MANAGER, isActive: true },
-        { id: '3', role: UserRole.WAITER, isActive: false },
+        {
+          id: '1',
+          name: 'Admin',
+          email: 'admin@test.com',
+          role: UserRole.ADMIN,
+          isActive: true,
+          createdAt: new Date('2026-05-20T10:00:00.000Z'),
+        },
+        {
+          id: '2',
+          name: 'Manager',
+          email: 'manager@test.com',
+          role: UserRole.MANAGER,
+          isActive: true,
+          createdAt: new Date('2026-05-20T11:00:00.000Z'),
+        },
+        {
+          id: '3',
+          name: 'Waiter',
+          email: 'waiter@test.com',
+          role: UserRole.WAITER,
+          isActive: false,
+          createdAt: new Date('2026-05-20T12:00:00.000Z'),
+        },
       ]);
 
       mockDb.restaurant.findMany.mockResolvedValue([
         { id: 'r1', isActive: true },
         { id: 'r2', isActive: false },
       ]);
+
+      mockDb.menuItem.count.mockResolvedValueOnce(12);
+      mockDb.menuItem.count.mockResolvedValueOnce(9);
+      mockDb.table.count.mockResolvedValue(7);
+      mockDb.tab.count.mockResolvedValueOnce(4);
+      mockDb.tab.count.mockResolvedValueOnce(1);
+      mockDb.tab.count.mockResolvedValueOnce(2);
+      mockDb.tab.aggregate.mockResolvedValue({ _sum: { totalAmount: 123.45 } });
 
       const result = await service.getStats();
 
@@ -50,6 +82,15 @@ describe('DashboardService', () => {
         waiter: 1,
         user: 0,
       });
+      expect(result.operations).toEqual({
+        totalMenuItems: 12,
+        availableMenuItems: 9,
+        totalTables: 7,
+        openTabs: 4,
+        closedTabsToday: 1,
+        cancelledTabsToday: 2,
+        revenueToday: 123.45,
+      });
     });
   });
 
@@ -60,10 +101,15 @@ describe('DashboardService', () => {
           id: 'r1',
           name: 'Rest 1',
           isActive: true,
+          city: 'São Paulo',
+          state: 'SP',
+          createdAt: new Date('2026-05-20T10:00:00.000Z'),
+          _count: { menuItems: 5, tables: 2, employees: 2 },
           employees: [
             { id: 'e1', role: UserRole.MANAGER, isActive: true },
             { id: 'e2', role: UserRole.WAITER, isActive: false },
           ],
+          tables: [{ tabs: [{ id: 't1' }] }, { tabs: [] }],
         },
       ]);
 
