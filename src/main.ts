@@ -60,6 +60,7 @@ async function bootstrap() {
     .addTag('Users', 'Gestão de usuários (apenas ADMIN)')
     .addTag('Dashboard', 'Visão geral administrativa (apenas ADMIN)')
     .addTag('Metrics', 'Métricas por restaurante (apenas ADMIN)')
+    .addTag('Presence', 'Presença e localização de usuários mobile')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

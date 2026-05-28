@@ -11,6 +11,7 @@ import { RestaurantsModule } from 'src/module/restaurants/restaurants.module';
 import { MetricsModule } from 'src/module/metrics/metrics.module';
 import { MenuModule } from 'src/module/menu/menu.module';
 import { TabsModule } from 'src/module/tabs/tabs.module';
+import { PresenceModule } from 'src/module/presence/presence.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TabsModule } from 'src/module/tabs/tabs.module';
     MetricsModule,
     MenuModule,
     TabsModule,
+    PresenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
