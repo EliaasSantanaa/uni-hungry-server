@@ -1,13 +1,14 @@
-# 🍽️ Uni Hungry — Server
+# Uni Hungry — Server
 
-API REST do sistema **Uni Hungry**, plataforma de gestão de restaurantes universitários.
-Construída com **NestJS**, **Prisma** (PostgreSQL via Supabase) e autenticação via **JWT + OTP por e-mail**.
+API REST do **Uni Hungry**, plataforma de gestão de restaurantes universitários. Construída com NestJS, Prisma (PostgreSQL via Supabase) e autenticação JWT + OTP por e-mail.
+
+> Parte do ecossistema Uni Hungry: atende o painel [`uni-hungry-admin`](../uni-hungry-admin) e o app mobile [`uni-hungry-app`](../uni-hungry-app).
 
 ---
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
-| Ferramenta | Versão mínima |
+| Ferramenta | Versão |
 |---|---|
 | Node.js | 20.x |
 | npm | 10.x |
@@ -15,24 +16,15 @@ Construída com **NestJS**, **Prisma** (PostgreSQL via Supabase) e autenticaçã
 
 ---
 
-## 🚀 Instalação e execução
-
-### 1. Clone o repositório
+## Instalação
 
 ```bash
 git clone https://github.com/seu-usuario/uni-hungry-server.git
 cd uni-hungry-server
-```
-
-### 2. Instale as dependências
-
-```bash
 npm install
 ```
 
-### 3. Configure as variáveis de ambiente
-
-Copie o arquivo de exemplo e preencha com suas credenciais:
+### Variáveis de ambiente
 
 ```bash
 cp .env.example .env
@@ -40,65 +32,77 @@ cp .env.example .env
 
 | Variável | Descrição |
 |---|---|
-| `DATABASE_URL` | Connection string do PostgreSQL (ex: `postgresql://user:pass@host:5432/db`) |
+| `DATABASE_URL` | Connection string do PostgreSQL |
 | `SUPABASE_URL` | URL do projeto Supabase |
 | `SUPABASE_ANON_KEY` | Chave anônima do Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | Chave de serviço do Supabase |
-| `RESEND_API_KEY` | Chave da API Resend (envio de e-mails OTP) |
-| `RESEND_FROM` | Endereço de envio dos e-mails (ex: `noreply@seudominio.com`) |
-| `FRONTEND_URL` | URL do frontend (adicionada ao CORS) |
-| `PORT` | Porta em que o servidor vai rodar (padrão: `3001`) |
-| `NODE_ENV` | Ambiente (`development` / `production`) |
+| `RESEND_API_KEY` | Chave da API Resend (envio de OTP) |
+| `RESEND_FROM` | Endereço de envio (ex: `noreply@seudominio.com`) |
+| `FRONTEND_URL` | URL do front-end (CORS) |
+| `PORT` | Porta do servidor (padrão: `3001`) |
+| `NODE_ENV` | `development` ou `production` |
 
-### 4. Execute as migrations do banco
+### Banco de dados
 
 ```bash
 npx prisma migrate deploy
+npx prisma generate   # após alterações no schema
+npm run seed:admin    # (opcional) cria admin inicial
 ```
-
-> Para gerar o Prisma Client após alterações no schema:
-> ```bash
-> npx prisma generate
-> ```
-
-### 5. (Opcional) Seed do banco — criar admin inicial
-
-```bash
-npm run seed:admin
-```
-
-### 6. Inicie o servidor
-
-```bash
-# Modo desenvolvimento (hot reload)
-npm run start:dev
-
-# Modo produção
-npm run start:prod
-```
-
-O servidor estará disponível em: **http://localhost:3001**
 
 ---
 
-## 📖 Documentação da API (Swagger)
+## Execução
 
-Com o servidor rodando, acesse:
-
-```
-http://localhost:3001/docs
-```
-
-A documentação interativa lista todas as rotas, parâmetros, exemplos de payload e respostas.
-
-### Fluxo de autenticação
-
-```
-POST /auth/sign-in       → envia código OTP por e-mail
-POST /auth/verify-otp    → valida o código e retorna o JWT
+```bash
+npm run start:dev     # Desenvolvimento (hot reload)
+npm run start:prod    # Produção
+npm run build         # Compilar
+npm run lint          # ESLint
+npm run format        # Prettier
 ```
 
-Use o token retornado no header de todas as requisições autenticadas:
+Servidor: **http://localhost:3001**  
+Swagger: **http://localhost:3001/docs**
+
+---
+
+## Testes unitários
+
+Os testes unitários usam **Jest** e ficam em arquivos `*.spec.ts` dentro de `src/`.
+
+```bash
+# Rodar todos os testes unitários
+npm run test
+
+# Modo watch (reexecuta ao salvar)
+npm run test:watch
+
+# Cobertura de código
+npm run test:cov
+
+# Debug
+npm run test:debug
+```
+
+**Testes E2E** (separados dos unitários):
+
+```bash
+npm run test:e2e
+```
+
+> Não é necessário banco ou `.env` para os testes unitários — serviços e controllers são testados com mocks.
+
+---
+
+## Autenticação
+
+```
+POST /auth/sign-in     → envia código OTP por e-mail
+POST /auth/verify-otp  → valida o código e retorna JWT
+```
+
+Header das requisições autenticadas:
 
 ```
 Authorization: Bearer <token>
@@ -106,22 +110,23 @@ Authorization: Bearer <token>
 
 ---
 
-## 🗂️ Módulos da API
+## Módulos da API
 
-| Prefixo | Descrição | Roles permitidas |
+| Prefixo | Descrição | Roles |
 |---|---|---|
-| `GET /` | Health check + status do banco | Público |
-| `/auth` | Autenticação (OTP) e gestão de funcionários | Público / Autenticado |
-| `/restaurants` | Gestão do restaurante do usuário | MANAGER, WAITER |
-| `/menu` | Cardápio — itens e categorias | MANAGER, WAITER |
+| `GET /` | Health check | Público |
+| `/auth` | Autenticação OTP e funcionários | Público / Autenticado |
+| `/restaurants` | Restaurante do usuário | MANAGER, WAITER |
+| `/menu` | Cardápio (itens e categorias) | MANAGER, WAITER |
 | `/tabs` | Mesas e comandas | MANAGER, WAITER |
 | `/users` | Gerenciamento de usuários | ADMIN |
-| `/dashboard` | Visão geral administrativa | ADMIN |
+| `/dashboard` | Visão administrativa | ADMIN |
 | `/metrics` | Métricas por restaurante | ADMIN |
+| `/presence` | Presença online | Autenticado |
 
 ---
 
-## 🐳 Docker
+## Docker
 
 ```bash
 docker build -t uni-hungry-server .
@@ -130,49 +135,25 @@ docker run -p 3001:3001 --env-file .env uni-hungry-server
 
 ---
 
-## 🧪 Testes
+## Tecnologias
 
-```bash
-# Testes unitários
-npm run test
-
-# Testes com watch
-npm run test:watch
-
-# Cobertura de testes
-npm run test:cov
-
-# Testes E2E
-npm run test:e2e
-```
+- NestJS · Prisma · PostgreSQL
+- Supabase · Resend · Passport JWT
+- Swagger (OpenAPI) · Jest
 
 ---
 
-## 🛠️ Scripts disponíveis
+## Equipe
 
-| Comando | Descrição |
+| Nome | RA |
 |---|---|
-| `npm run start:dev` | Inicia em modo desenvolvimento com hot reload |
-| `npm run start:debug` | Inicia em modo debug com hot reload |
-| `npm run start:prod` | Inicia a build de produção |
-| `npm run build` | Compila o projeto |
-| `npm run lint` | Executa o ESLint |
-| `npm run format` | Formata o código com Prettier |
-| `npm run seed:admin` | Cria o usuário administrador inicial |
+| Elias Santana Santos | 97351 |
+| Gabriel da Silva Araujo | 89655 |
+| Nathan Rodrigues de Freitas | 98502 |
+| Thiago de Almeida Brum | 95574 |
 
 ---
 
-## 🏗️ Tecnologias
-
-- **[NestJS](https://nestjs.com/)** — framework Node.js
-- **[Prisma](https://www.prisma.io/)** — ORM com PostgreSQL
-- **[Supabase](https://supabase.com/)** — banco de dados e autenticação base
-- **[Resend](https://resend.com/)** — envio de e-mails transacionais (OTP)
-- **[Passport JWT](https://www.passportjs.org/)** — autenticação por token
-- **[@nestjs/swagger](https://docs.nestjs.com/openapi/introduction)** — documentação OpenAPI
-
----
-
-## 📄 Licença
+## Licença
 
 Projeto privado — todos os direitos reservados.
