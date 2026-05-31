@@ -6,6 +6,17 @@ API REST do **Uni Hungry**, plataforma de gestão de restaurantes universitário
 
 ---
 
+## Equipe
+
+| Nome | RA |
+|---|---|
+| Elias Santana Santos | 97351 |
+| Gabriel da Silva Araujo | 89655 |
+| Nathan Rodrigues de Freitas | 98502 |
+| Thiago de Almeida Brum | 95574 |
+
+---
+
 ## Pré-requisitos
 
 | Ferramenta | Versão |
@@ -19,7 +30,7 @@ API REST do **Uni Hungry**, plataforma de gestão de restaurantes universitário
 ## Instalação
 
 ```bash
-git clone https://github.com/seu-usuario/uni-hungry-server.git
+git clone https://github.com/EliaasSantanaa/uni-hungry-server.git
 cd uni-hungry-server
 npm install
 ```
@@ -140,20 +151,3 @@ docker run -p 3001:3001 --env-file .env uni-hungry-server
 - NestJS · Prisma · PostgreSQL
 - Supabase · Resend · Passport JWT
 - Swagger (OpenAPI) · Jest
-
----
-
-## Equipe
-
-| Nome | RA |
-|---|---|
-| Elias Santana Santos | 97351 |
-| Gabriel da Silva Araujo | 89655 |
-| Nathan Rodrigues de Freitas | 98502 |
-| Thiago de Almeida Brum | 95574 |
-
----
-
-## Licença
-
-Projeto privado — todos os direitos reservados.
