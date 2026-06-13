@@ -2,15 +2,18 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const logger = new Logger('Application');
   const app = await NestFactory.create(AppModule);
+  app.use('/whatsapp/webhook', bodyParser.urlencoded({ extended: false }));
 
-  // Configurar CORS para permitir frontend
   const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:3001',
+    'http://localhost:3002',
+    'http://localhost:3003',
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:8081',

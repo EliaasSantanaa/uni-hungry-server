@@ -12,6 +12,7 @@ import { MetricsModule } from 'src/module/metrics/metrics.module';
 import { MenuModule } from 'src/module/menu/menu.module';
 import { TabsModule } from 'src/module/tabs/tabs.module';
 import { PresenceModule } from 'src/module/presence/presence.module';
+import { WhatsAppModule } from 'src/module/whatsapp/whatsapp.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { PresenceModule } from 'src/module/presence/presence.module';
     MenuModule,
     TabsModule,
     PresenceModule,
+    WhatsAppModule,
   ],
   controllers: [AppController],
   providers: [AppService],
