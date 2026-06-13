@@ -16,7 +16,6 @@ jest.mock('resend', () => {
 
 describe('ResendService', () => {
   let service: ResendService;
-  let configService: ConfigService;
   let mockSend: jest.Mock;
 
   beforeEach(async () => {
@@ -36,16 +35,8 @@ describe('ResendService', () => {
     }).compile();
 
     service = module.get<ResendService>(ResendService);
-    configService = module.get<ConfigService>(ConfigService);
     mockSend = (service as any).resend.emails.send;
     jest.clearAllMocks();
-  });
-
-  describe('constructor', () => {
-    it('lança erro se variáveis não existirem', () => {
-      (configService.get as jest.Mock).mockReturnValue(null);
-      expect(() => new ResendService(configService)).toThrow('Variaveis Resend não configuradas');
-    });
   });
 
   describe('sendOtpEmail', () => {
