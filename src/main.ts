@@ -17,6 +17,7 @@ async function bootstrap() {
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:8081',
+    'chat.unihungry.com.br',
     process.env.FRONTEND_URL,
   ].filter(Boolean);
 
