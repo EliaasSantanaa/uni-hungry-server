@@ -1,12 +1,21 @@
-import { Injectable, NotFoundException, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Logger,
+} from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { SupabaseService } from '../auth/services/supabase.service';
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private readonly db: PrismaService) {}
+  constructor(
+    private readonly db: PrismaService,
+    private readonly supabaseService: SupabaseService,
+  ) {}
 
   async findAll() {
     const users = await this.db.user.findMany({
@@ -34,8 +43,24 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    // Verifica se o usuário existe
-    await this.findOne(id);
+    const existingUser = await this.findOne(id);
+
+    if (
+      updateUserDto.isActive !== undefined &&
+      updateUserDto.isActive !== existingUser.isActive
+    ) {
+      const supabaseResult = await this.supabaseService.setUserActiveStatus(
+        id,
+        updateUserDto.isActive,
+      );
+
+      if (!supabaseResult.success) {
+        throw new BadRequestException(
+          supabaseResult.error ||
+            'Nao foi possivel atualizar status no Supabase',
+        );
+      }
+    }
 
     const updatedUser = await this.db.user.update({
       where: { id },

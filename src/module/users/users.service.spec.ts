@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { PrismaService } from 'src/database/prisma.service';
+import { SupabaseService } from '../auth/services/supabase.service';
 
 const mockDb = {
   user: {
@@ -12,6 +13,10 @@ const mockDb = {
   },
 };
 
+const mockSupabase = {
+  setUserActiveStatus: jest.fn(),
+};
+
 describe('UsersService', () => {
   let service: UsersService;
 
@@ -20,6 +25,7 @@ describe('UsersService', () => {
       providers: [
         UsersService,
         { provide: PrismaService, useValue: mockDb },
+        { provide: SupabaseService, useValue: mockSupabase },
       ],
     }).compile();
 
@@ -50,9 +56,39 @@ describe('UsersService', () => {
   });
 
   it('update atualiza usuário com sucesso', async () => {
-    mockDb.user.findUnique.mockResolvedValue({ id: '1' });
+    mockDb.user.findUnique.mockResolvedValue({ id: '1', isActive: true });
     mockDb.user.update.mockResolvedValue({ id: '1', name: 'Updated' });
-    expect(await service.update('1', { name: 'Updated' })).toEqual({ id: '1', name: 'Updated' });
+    expect(await service.update('1', { name: 'Updated' })).toEqual({
+      id: '1',
+      name: 'Updated',
+    });
+  });
+
+  it('update sincroniza status no Supabase ao alterar isActive', async () => {
+    mockDb.user.findUnique.mockResolvedValue({ id: '1', isActive: true });
+    mockSupabase.setUserActiveStatus.mockResolvedValue({ success: true });
+    mockDb.user.update.mockResolvedValue({ id: '1', isActive: false });
+
+    await service.update('1', { isActive: false });
+
+    expect(mockSupabase.setUserActiveStatus).toHaveBeenCalledWith('1', false);
+    expect(mockDb.user.update).toHaveBeenCalledWith({
+      where: { id: '1' },
+      data: { isActive: false },
+    });
+  });
+
+  it('update falha se Supabase nao atualizar isActive', async () => {
+    mockDb.user.findUnique.mockResolvedValue({ id: '1', isActive: true });
+    mockSupabase.setUserActiveStatus.mockResolvedValue({
+      success: false,
+      error: 'Erro Supabase',
+    });
+
+    await expect(service.update('1', { isActive: false })).rejects.toThrow(
+      BadRequestException,
+    );
+    expect(mockDb.user.update).not.toHaveBeenCalled();
   });
 
   it('remove lança erro se não achar', async () => {
